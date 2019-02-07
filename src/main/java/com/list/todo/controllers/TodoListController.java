@@ -1,13 +1,11 @@
 package com.list.todo.controllers;
 
+import com.list.todo.entity.Notification;
 import com.list.todo.entity.Share;
 import com.list.todo.entity.TodoList;
 import com.list.todo.entity.User;
 import com.list.todo.security.UserPrincipal;
-import com.list.todo.services.FollowerService;
-import com.list.todo.services.ShareService;
-import com.list.todo.services.TodoListService;
-import com.list.todo.services.UserService;
+import com.list.todo.services.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -28,6 +26,7 @@ public class TodoListController {
 	private final UserService userService;
 	private final ShareService shareService;
 	private final FollowerService followerService;
+	private final NotificationService notificationService;
 	
 	@GetMapping("/my")
 	public ResponseEntity<List<TodoList>> getTodoListsByUser(@AuthenticationPrincipal UserPrincipal currentUser) {
@@ -68,6 +67,8 @@ public class TodoListController {
 
 		todoListService.addTodoList(todoList);
 		followerService.notifyFollowersAboutAddTodoList(currentUser, todoList);
+		NotificationController notificationController = new NotificationController();
+		notificationController.sendNotification("hello");
 
 		return new ResponseEntity<>(todoList, HttpStatus.OK);
 	}
