@@ -2,6 +2,9 @@ pipeline {
     agent any
     stages {
         stage('Build') {
+            script {
+                env."NUM_BUILD" = BUILD_NUMBER 
+            }   
             agent {
                 docker {
                     image 'maven:3-alpine'
