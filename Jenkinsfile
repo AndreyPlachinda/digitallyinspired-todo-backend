@@ -2,11 +2,6 @@ pipeline {
     agent any
     stages {
         stage('Build') {
-            steps{
-                script {
-                    env."NUM_BUILD" = BUILD_NUMBER 
-                }   
-            }
             agent {
                 docker {
                     image 'maven:3-alpine'
@@ -25,6 +20,7 @@ pipeline {
                     unarchive(mapping: ['target/*.jar' : '.'])
                     docker.withRegistry('https://' + ECR_REPO, 'ecr:eu-west-1:aws_ecr_creds') {
                         docker.build(ECR_REPO + ':${BUILD_NUMBER}').push()
+                        env.NUM_BUILD = env.BUILD_NUMBER
                     }
                 }
             }
