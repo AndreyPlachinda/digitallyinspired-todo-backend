@@ -9,6 +9,7 @@ pipeline {
                 }
             }
             steps {
+                sh "sed -i 's/localhost:3000/todo-front:7700/' src/main/java/com/list/todo/configurations/SecurityConfiguration.java"
                 sh 'mvn -B -DskipTests clean package'
                 archiveArtifacts 'target/*.jar'
             }
